@@ -1,8 +1,19 @@
 // ─── Helpers ─────────────────────────────────────────────
 const av  = (n) => `https://api.dicebear.com/7.x/avataaars/svg?seed=${n.replace(/\s/g,'')}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
 const ph  = (h, w) => ({ height: h, weight: w, bmi: +(w / (h / 100) ** 2).toFixed(1) });
-const fit = (e, st, sp, fl) => ({ endurance: e, strength: st, speed: sp, flexibility: fl });
-const tr  = (date, type, duration, notes) => ({ date, type, duration, notes });
+const fit = (e, st, sp, fl) => ({
+  endurance:    e,
+  strength:     st,
+  speed:        sp,
+  flexibility:  fl,
+  agility:      Math.min(99, Math.max(50, Math.round(sp * 0.82 + fl * 0.12 + (e + st) * 0.03))),
+  power:        Math.min(99, Math.max(50, Math.round(st * 0.80 + e  * 0.10 + (sp + fl) * 0.05))),
+  stamina:      Math.min(99, Math.max(50, Math.round(e  * 0.85 + st * 0.08 + (sp + fl) * 0.035))),
+  balance:      Math.min(99, Math.max(50, Math.round(fl * 0.50 + sp * 0.30 + st * 0.12 + e * 0.08))),
+  reaction:     Math.min(99, Math.max(50, Math.round(sp * 0.50 + fl * 0.25 + e  * 0.15 + st * 0.10))),
+  coordination: Math.min(99, Math.max(50, Math.round(sp * 0.35 + fl * 0.32 + e  * 0.22 + st * 0.11))),
+});
+const tr  = (date, type, duration, notes, intensity = 'medium') => ({ date, type, duration, notes, intensity });
 const inj = (status, detail = '') => ({ status, detail });
 
 // ─── Sports meta ─────────────────────────────────────────
@@ -660,3 +671,46 @@ export const athletes = [
     training: [tr('2024-01-08','shooting',65,'Accuracy at 50+ yards'), tr('2024-01-12','flexibility',40,'Kicker hip rotation'), tr('2024-01-16','cardio',30,'Kicker warm-up protocol')],
   },
 ];
+
+// ─── Sport-specific Metrics & Position Tags ───────────────
+export const SPORT_METRICS = {
+  soccer: {
+    keyMetrics: ['endurance', 'speed', 'agility', 'coordination', 'stamina'],
+    positionTags: {
+      GK:  ['Shot Stopper', 'Aerial Command', 'Distribution'],
+      CB:  ['Aerial Duels', 'Ball Playing', 'Defensive Leader'],
+      LB:  ['Overlapping Runs', 'Crossing', 'Defensive Cover'],
+      RB:  ['Overlapping Runs', 'Crossing', 'Defensive Cover'],
+      CM:  ['Box-to-Box', 'Press Resistance', 'Distribution'],
+      CAM: ['Creative Play', 'Key Passes', 'Final Third'],
+      LW:  ['Pace & Dribble', 'Cut Inside', 'Chance Creation'],
+      RW:  ['Pace & Dribble', 'Cut Inside', 'Chance Creation'],
+      ST:  ['Clinical Finish', 'Hold-up Play', 'Movement'],
+    },
+  },
+  basketball: {
+    keyMetrics: ['speed', 'agility', 'reaction', 'coordination', 'power'],
+    positionTags: {
+      PG: ['Playmaker', 'Ball Handler', 'Court Vision'],
+      SG: ['Perimeter Scorer', 'Off-Ball Movement', 'Shooting'],
+      SF: ['Versatile', 'Two-Way Player', 'Wing Scorer'],
+      PF: ['Post Play', 'Rebounding', 'Mid-Range'],
+      C:  ['Paint Presence', 'Shot Blocking', 'Rim Protection'],
+    },
+  },
+  football: {
+    keyMetrics: ['strength', 'power', 'endurance', 'reaction', 'speed'],
+    positionTags: {
+      QB: ['Field General', 'Pocket Presence', 'Decision Maker'],
+      RB: ['Elusive Runner', 'Receiving Back', 'Pass Block'],
+      WR: ['Route Runner', 'Speed Threat', 'Contested Catch'],
+      TE: ['Blocking TE', 'Receiving TE', 'Red Zone'],
+      OL: ['Pass Protection', 'Run Blocking', 'Anchor'],
+      DL: ['Pass Rusher', 'Run Stopper', 'Motor'],
+      LB: ['Coverage LB', 'Blitz Package', 'Tackler'],
+      CB: ['Man Coverage', 'Zone Coverage', 'Ball Hawk'],
+      S:  ['Deep Safety', 'Run Support', 'Coverage'],
+      K:  ['Accuracy', 'Power Kick', 'Consistency'],
+    },
+  },
+};

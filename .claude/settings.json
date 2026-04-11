@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(taskkill /PID 10524 /F)",
+      "Bash(findstr \":5173 \\\\|:5174 \")",
+      "Bash(cmd /c \"taskkill /PID 10524 /F\")",
+      "Bash(cmd /c \"taskkill /PID 6052 /F\")",
+      "Bash(cmd /c \"for /f \\\\\"tokens=5\\\\\" %a in \\('netstat -ano ^| findstr \\\\\":5000 \\\\\" ^| findstr LISTENING'\\) do taskkill /PID %a /F\")",
+      "Bash(cmd /c \"taskkill /PID 10524 /F /T 2>&1\")",
+      "Bash(cmd /c \"wmic process where \\\\\"name='node.exe'\\\\\" get ProcessId,CommandLine 2>nul\")",
+      "Bash(cmd /c \"taskkill /IM node.exe /F 2>&1\")"
+    ]
+  }
+}
